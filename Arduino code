@@ -1,0 +1,160 @@
+#include <Servo.h>
+
+ 
+Servo myservo;
+
+int pos = 0; // inital position of servo motor
+const int trigPin = 9;
+const int echoPin = 10;
+const int motor = 11;
+const int buzzer = 12;
+const int ledPin1 = A0;
+const int ledPin2 = A1;
+float distanceCm, DistanceSec,duration;
+ 
+void setup() {
+Serial.begin(115200);
+myservo.attach(motor); // attach servo to pin 11
+
+pinMode(trigPin, OUTPUT);
+pinMode(echoPin, INPUT);
+pinMode(buzzer, OUTPUT);
+pinMode(ledPin1, OUTPUT);
+pinMode(ledPin2, OUTPUT);
+DistanceSec=50;
+ 
+}
+ 
+void loop() {
+for (pos = 0; pos <= 180; pos += 1) { 
+// in steps of 1 degree
+myservo.write(pos);   //program the servo to go to the position
+digitalWrite(trigPin, LOW);
+delayMicroseconds(2);
+digitalWrite(trigPin, HIGH); 
+delayMicroseconds(10);
+digitalWrite(trigPin, LOW);
+ 
+duration = pulseIn(echoPin, HIGH);
+distanceCm= duration*0.034/2;
+if (distanceCm <= DistanceSec)
+{
+ 
+if(distanceCm <= DistanceSec/2)
+{
+ 
+tone(buzzer, 10); // Send 1KHz sound signal...
+digitalWrite(ledPin1, LOW);
+digitalWrite(ledPin2, HIGH);
+delay(700);
+noTone(buzzer); // Stop sound...
+
+Serial.print("Distance: "); //
+Serial.print(distanceCm); //
+Serial.println(" cm ");
+delay(10);
+Serial.print("Angle: "); //
+Serial.print(pos); //
+Serial.println("deg ");
+delay(2000);
+}
+else
+{
+tone(buzzer, 10); // Send 1KHz sound signal...
+
+digitalWrite(buzzer, HIGH);
+digitalWrite(ledPin2, LOW);
+digitalWrite(ledPin1, HIGH);
+delay(100);
+digitalWrite(buzzer, LOW);
+noTone(buzzer); // Stop sound...
+
+
+Serial.print("Distance: "); //
+Serial.print(distanceCm); //
+Serial.println(" cm ");
+delay(10);
+Serial.print("Angle: "); //
+Serial.print(pos); //
+Serial.println("deg ");
+
+delay(2000);
+}
+}
+else{
+digitalWrite(buzzer, LOW);
+digitalWrite(ledPin1, LOW);
+digitalWrite(ledPin2, LOW);
+}
+Serial.print("Distance: "); //
+Serial.print(distanceCm); //
+Serial.println(" cm ");
+delay(10);
+Serial.print("Angle: "); //
+Serial.print(pos); //
+Serial.println("deg ");
+delay(80); //attendre 100ms pour que le servo cherche sa position
+ 
+}
+for (pos = 180; pos >= 0; pos -= 1) { //
+myservo.write(pos); //
+digitalWrite(trigPin, LOW);
+delayMicroseconds(2);
+digitalWrite(trigPin, HIGH);
+delayMicroseconds(10);
+digitalWrite(trigPin, LOW);
+ 
+duration = pulseIn(echoPin, HIGH);
+distanceCm= duration*0.034/2;
+if (distanceCm <= DistanceSec){
+if(distanceCm <= DistanceSec/2)
+{
+tone(buzzer, 10); // Send 1KHz sound signal...
+digitalWrite(ledPin1, LOW);
+digitalWrite(ledPin2, HIGH);
+delay(700);
+noTone(buzzer); // Stop sound...
+
+Serial.print("Distance: "); //
+Serial.print(distanceCm); //
+Serial.println(" cm ");
+delay(10);
+Serial.print("Angle: "); //
+Serial.print(pos); //
+Serial.println("deg ");
+delay(2000);
+}
+else
+{
+digitalWrite(buzzer, HIGH);
+digitalWrite(ledPin2, LOW);
+digitalWrite(ledPin1, HIGH);
+delay(100);
+digitalWrite(buzzer, LOW);
+
+Serial.print(distanceCm); //
+Serial.println(" cm ");
+delay(10);
+Serial.print("Angle: "); //
+Serial.print(pos); //
+Serial.println("deg ");
+delay(2000);
+}
+}
+else{
+digitalWrite(buzzer, LOW);
+digitalWrite(ledPin1, LOW);
+digitalWrite(ledPin2, LOW);
+}
+ 
+
+Serial.print("Distance: "); //
+Serial.print(distanceCm); //
+Serial.println(" cm ");
+delay(10);
+Serial.print("Angle: "); //
+Serial.print(pos); //
+Serial.println("deg ");
+delay(80);
+}
+}
